@@ -8,6 +8,8 @@ int main()
 	processes* proc = new processes();
 	int time = 0;
 	int currentProcess = 0;
+	int waitingTime = 0;
+	int avgWaitingTime = 0;
 	
 	for (int i = 0; i < NUM_OF_PROC; i++)
 	{
@@ -23,6 +25,7 @@ int main()
 		cout << "Current Process: " << currentProcess << endl;
 		if (currentProcessStartTime <= time)
 		{
+			waitingTime += (time - currentProcessStartTime);
 			cout << "Running process" << endl;
 			// Get # of cycles in current process
 			int currentProcessCycles = proc->procs[currentProcess].get_cycles();
@@ -44,6 +47,8 @@ int main()
 		}
 	}
 	
+	avgWaitingTime = waitingTime / NUM_OF_PROC;
 	cout << "Finished FIFO simulation at time: " << time << endl;
+	cout << "Average FIFO waiting time: " << avgWaitingTime << endl;
 	return 0;
 }
