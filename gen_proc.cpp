@@ -1,10 +1,11 @@
 #include "gen_proc.h"
 using namespace std;
-process::process(int new_id, int new_cyc, int new_mem)
+process::process(int new_id, int new_cyc, int new_mem, int new_arr)
 {
 	id = new_id;
 	cycles = new_cyc;
 	memory_size = new_mem;
+	arrival_time = new_arr;
 }
 int process::getID(void)
 {
@@ -19,11 +20,16 @@ int process::get_mem(void)
 	return memory_size;
 }
 
+int process::get_arr(void)
+{
+	return arrival_time;
+}
+
 processes::processes()
 {
 	int randoms[12];
 	int id=0;
-	int cpu_time=0, mem_time=0;
+	int cpu_time=0, mem_time=0, arr_time=0;
 	srand(time(NULL));
 	for (int z=0; z<NUM_OF_PROC; z++)
 	{
@@ -54,7 +60,8 @@ processes::processes()
 		mem_time = mem_time *.2 - 30;
 		if (mem_time < 1)
 			mem_time = rand()%20 + 1;
-		procs.push_back(process(id, cpu_time, mem_time));
+		procs.push_back(process(id, cpu_time, mem_time, arr_time));
+		arr_time += 50;
 		id++;
 	}
 

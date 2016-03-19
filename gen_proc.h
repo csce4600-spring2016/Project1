@@ -13,11 +13,13 @@ class process{
 		int id;
 		int cycles;
 		int memory_size;
+		int arrival_time;
 	public:
-		process(int new_id, int new_cyc, int new_mem);
+		process(int new_id, int new_cyc, int new_mem, int new_arr);
 		int getID(void);
 		int get_cycles(void);
 		int get_mem(void);
+		int get_arr(void);
 };
 class processes{
 	public:
