@@ -6,6 +6,7 @@ process::process(int new_id, int new_cyc, int new_mem, int new_arr)
 	cycles = new_cyc;
 	memory_size = new_mem;
 	arrival_time = new_arr;
+	is_finished = false;
 }
 int process::getID(void)
 {
@@ -23,6 +24,17 @@ int process::get_mem(void)
 int process::get_arr(void)
 {
 	return arrival_time;
+}
+
+bool process::get_finished_state(void)
+{
+	return is_finished;
+}
+
+void process::set_finished_state(bool s)
+{
+	is_finished = s;
+	return;
 }
 
 processes::processes()

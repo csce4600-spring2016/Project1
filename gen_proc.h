@@ -14,12 +14,15 @@ class process{
 		int cycles;
 		int memory_size;
 		int arrival_time;
+		bool is_finished;
 	public:
 		process(int new_id, int new_cyc, int new_mem, int new_arr);
 		int getID(void);
 		int get_cycles(void);
 		int get_mem(void);
 		int get_arr(void);
+		bool get_finished_state(void);
+		void set_finished_state(bool s);
 };
 class processes{
 	public:
