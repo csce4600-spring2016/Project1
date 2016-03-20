@@ -14,13 +14,17 @@ class process{
 		int cycles;
 		int memory_size;
 		int arrival_time;
+		int time_stopped;
 		bool is_finished;
 	public:
 		process(int new_id, int new_cyc, int new_mem, int new_arr);
 		int getID(void);
 		int get_cycles(void);
+		void set_cycles(int c);
 		int get_mem(void);
 		int get_arr(void);
+		int get_time_stopped(void);
+		void set_time_stopped(int t);
 		bool get_finished_state(void);
 		void set_finished_state(bool s);
 };

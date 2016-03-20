@@ -10,6 +10,7 @@ int main()
 	int currentProcess = 0;
 	int waitingTime = 0;
 	int avgWaitingTime = 0;
+	int contextPenalty = 0;
 	
 	for (int i = 0; i < NUM_OF_PROC; i++)
 	{
@@ -39,6 +40,13 @@ int main()
 			
 			// Move to next process
 			currentProcess++;
+			
+			// Context switch penalty
+			for (int i = 0; i < 10; i++)
+			{
+				time++;
+				contextPenalty++;
+			}
 		}
 		else
 		{
@@ -50,5 +58,6 @@ int main()
 	avgWaitingTime = waitingTime / NUM_OF_PROC;
 	cout << "Finished FIFO simulation at time: " << time << endl;
 	cout << "Average FIFO waiting time: " << avgWaitingTime << endl;
+	cout << "Total context switch penalty: " << contextPenalty << endl;
 	return 0;
 }

@@ -11,6 +11,7 @@ int main()
 	int waitingTime = 0;
 	int avgWaitingTime = 0;
 	int numFinishedProc = 0;
+	int contextPenalty = 0;
 	
 	for (int i = 0; i < NUM_OF_PROC; i++)
 	{
@@ -68,6 +69,12 @@ int main()
 			}
 			
 			currentProcess = nextProcess;
+			// Context switch penalty
+			for (int i = 0; i < 10; i++)
+			{
+				time++;
+				contextPenalty++;
+			}
 		}
 		else
 		{
@@ -79,4 +86,6 @@ int main()
 	avgWaitingTime = waitingTime / NUM_OF_PROC;
 	cout << "Finished SJF simulation at time: " << time << endl;
 	cout << "Average SJF waiting time: " << avgWaitingTime << endl;
+	cout << "Total context switch penalty: " << contextPenalty << endl;
+	return 0;
 }
