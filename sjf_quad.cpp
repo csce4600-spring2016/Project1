@@ -38,13 +38,28 @@ void processor(int p)
 					int nextProcess = 0;
 					for (int i = 0; i < NUM_OF_PROC; i++)
 					{
+						// If proc[i] is UNLOCKED
 						if (proc->procs[i].get_locked_state() == false)
 						{
+							// AND UNFINISHED
 							if (proc->procs[i].get_finished_state() == false)
 							{
-								if (proc->procs[nextProcess].get_finished_state() == false)
+								//It becomes a candidate
+								
+								// If proc[nextProcess] is UNLOCKED
+								if (proc->procs[nextProcess].get_locked_state() == false)
 								{
-									if (proc->procs[i].get_cycles() < proc->procs[nextProcess].get_cycles())
+									// AND UNFINISHED
+									if (proc->procs[nextProcess].get_finished_state() == false)
+									{
+										// It, too, becomes a candidate
+										
+										if (proc->procs[i].get_cycles() < proc->procs[nextProcess].get_cycles())
+										{
+											nextProcess = i;
+										}
+									}
+									else
 									{
 										nextProcess = i;
 									}
@@ -110,6 +125,7 @@ int main()
 			}
 			else
 			{
+				cout << proc->procs[currentProcess[0]].get_cycles() << endl;
 				cout << "Core 0 idle" << endl;
 			}
 			// We need to make sure the process we have is: (locked in && not finished).
