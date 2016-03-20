@@ -7,6 +7,7 @@ process::process(int new_id, int new_cyc, int new_mem, int new_arr)
 	memory_size = new_mem;
 	arrival_time = new_arr;
 	is_finished = false;
+	is_locked = false;
 	time_stopped = new_arr;
 }
 int process::getID(void)
@@ -21,6 +22,7 @@ int process::get_cycles(void)
 void process::set_cycles(int c)
 {
 	cycles = c;
+	return;
 }
 
 int process::get_mem(void)
@@ -41,6 +43,18 @@ int process::get_time_stopped(void)
 void process::set_time_stopped(int t)
 {
 	time_stopped = t;
+	return;
+}
+
+bool process::get_locked_state(void)
+{
+	return is_locked;
+}
+
+void process::set_locked_state(bool s)
+{
+	is_locked = s;
+	return;
 }
 
 bool process::get_finished_state(void)
