@@ -1,4 +1,7 @@
-// FIFO (Quad core) - Charles Alan Macon
+// FIFO (Quad core)
+// Charles Alan Macon
+// David Cmar
+// Noah Kindervag
 #include "gen_proc.h"
 
 using namespace std;
@@ -13,10 +16,12 @@ int context[4] = {0, 0, 0, 0};
 
 void processor(int p)
 {
+	// So basically, we're using this function to do a single "time-slice" of whatever process
+	// a given core has been assigned.
+	// In this first part, we check to make sure the process is locked to the core, that it isn't finished, 
+	// and that the process is supposed to have started.
 	if (proc->procs[currentProcess[p]].get_locked_state() == true && proc->procs[currentProcess[p]].get_finished_state() == false && proc->procs[currentProcess[p]].get_arr() <= timeClick)
 			{
-				// Need to get waiting timeClick ONCE
-				
 				// if "currentProcess" still has cycles, we need to subtract one from it
 				if (proc->procs[currentProcess[p]].get_cycles() > 1)
 				{
@@ -52,14 +57,8 @@ void processor(int p)
 
 int main()
 {
-	//processes* proc = new processes();
-	//int timeClick = 0;
-	//int currentProcess[4] = {0, 1, 2, 3};
-	//int numFinishedProc = 0;
-	//int waitingtimeClick = 0;
 	int avgWaitingtimeClick = 0;
 	int contextPenalty = 0;
-	//int context[4] = {0, 0, 0, 0};
 	int cycles[4] = {0, 0, 0, 0};
 	
 	for (int i = 0; i < NUM_OF_PROC; i++)
@@ -84,6 +83,7 @@ int main()
 		// Core 0
 		if (context[0] == 0)
 		{
+			// If the given process for this core has cycles left, we should display that.
 			if (proc->procs[currentProcess[0]].get_cycles() > 0)
 			{
 				cout << "Core 0 process ID: " << currentProcess[0] << "\tRemaining Cycles: " << proc->procs[currentProcess[0]].get_cycles() <<endl;
@@ -93,13 +93,23 @@ int main()
 				cout << "Core 0 idle" << endl;
 			}
 			// We need to make sure the process we have is: (locked in && not finished).
+			// If our core is idle, we can assume that we have no more processes.
+			// Processor() accounts for that, fortunately and won't waste any time with a
+			// finished process list.
 			processor(0);
 		}
 		else
 		{
+			// Here's the real fun part. We set the context to 10 whenever we switch processes, and
+			// boom, there's our penalty.
 			context[0] = context[0] - 1;
 			contextPenalty++;
 		}
+		
+		// Cores 1-3 follow the exact same pattern, so I won't bore us by writing the same comments
+		// over and over again. Basically, as noted above, Processor() executes a single "time-slice"
+		// of each process. So, we should do it four times (once for each core). Fun and educational, to boot!
+		
 		// Core 1
 		if (context[1] == 0)
 		{
@@ -161,6 +171,7 @@ int main()
 		timeClick++;		
 	}
 	
+	// Average everything out, spit out all the info. Fun.
 	avgWaitingtimeClick = waitingtimeClick / NUM_OF_PROC;
 	cout << "Finished FIFO_QUAD simulation at timeClick: " << timeClick << endl;
 	cout << "Average FIFO_QUAD waiting timeClick: " << avgWaitingtimeClick << endl;

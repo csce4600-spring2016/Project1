@@ -1,4 +1,7 @@
-// SJF (Quad core) - Charles Alan Macon
+// SJF (Quad core)
+// Charles Alan Macon
+// David Cmar
+// Noah Kindervag
 #include "gen_proc.h"
 
 using namespace std;
@@ -15,8 +18,6 @@ void processor(int p)
 {
 	if (proc->procs[currentProcess[p]].get_locked_state() == true && proc->procs[currentProcess[p]].get_finished_state() == false && proc->procs[currentProcess[p]].get_arr() <= timeClick)
 			{
-				// Need to get waiting timeClick ONCE
-				
 				// if "currentProcess" still has cycles, we need to subtract one from it
 				if (proc->procs[currentProcess[p]].get_cycles() > 1)
 				{
@@ -87,14 +88,8 @@ void processor(int p)
 
 int main()
 {
-	//processes* proc = new processes();
-	//int timeClick = 0;
-	//int currentProcess[4] = {0, 1, 2, 3};
-	//int numFinishedProc = 0;
-	//int waitingtimeClick = 0;
 	int avgWaitingtimeClick = 0;
 	int contextPenalty = 0;
-	//int context[4] = {0, 0, 0, 0};
 	int cycles[4] = {0, 0, 0, 0};
 	
 	for (int i = 0; i < NUM_OF_PROC; i++)
@@ -136,6 +131,9 @@ int main()
 			context[0] = context[0] - 1;
 			contextPenalty++;
 		}
+		
+		// All cores function the same, so I'm not going to comment everything over and over and over and over again.
+		
 		// Core 1
 		if (context[1] == 0)
 		{

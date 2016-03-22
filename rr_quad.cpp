@@ -1,4 +1,7 @@
-// RR2 (Quad core) - Charles Alan Macon
+// RR2 (Quad core)
+// Charles Alan Macon
+// David Cmar
+// Noah Kindervag
 #include "gen_proc.h"
 
 using namespace std;
@@ -65,6 +68,11 @@ int findNextProcess(int core)
 	bool foundNextProcess = false;
 	proc->procs[cp].set_locked_state(false);	// unlock current process
 	
+	// Okay, we're doing round robin here, so we need to loop back around to the beginning of the process
+	// list once we've hit the end. Are there more elegant ways to do this? Yes, I'm sure. But I'm a full time
+	// student working 40+ hours a week. Have I made some poor life choices? You betcha'. However, this works, and again,
+	// I'm happy with that. -CAM
+	
 	while (!foundNextProcess)
 	{
 		if (cp < 49)
@@ -88,26 +96,23 @@ int findNextProcess(int core)
 		
 		if (cp == oldp)
 		{
+			// Ideally, we would never have to come back to findNextProcess once we're out of processes, but
+			// this works better than anything else I tried to hack together. We'll continuously hit this point,
+			// and carry on our way without "processing" anything.
 			cout << "Core " << core << " has no more processes" << endl;
 			foundNextProcess = true;
 		}
 	}
 	
 	proc->procs[cp].set_locked_state(true); // lock it up
-	waitingtimeClick += (timeClick - (proc->procs[cp].get_time_stopped())); // this isn't right
+	waitingtimeClick += (timeClick - (proc->procs[cp].get_time_stopped())); // It works!
 	return cp;
 }
 
 int main()
 {
-	//processes* proc = new processes();
-	//int timeClick = 0;
-	//int currentProcess[4] = {0, 1, 2, 3};
-	//int numFinishedProc = 0;
-	//int waitingtimeClick = 0;
 	int avgWaitingtimeClick = 0;
 	int contextPenalty = 0;
-	//int context[4] = {0, 0, 0, 0};
 	int cycles[4] = {0, 0, 0, 0};
 	
 	for (int i = 0; i < NUM_OF_PROC; i++)
@@ -158,6 +163,13 @@ int main()
 			}
 			
 		}
+		
+		// If you've been following along, you'll notice that I've split what's effectively the same code
+		// into four "chunks". Now, it would probably be "easier" to make this a function and just have a
+		// loop that counts from 0 to 3, and processes everything that way. In fact, I probably should have done that
+		// and shortened the code considerably. However, it's much easier to think of it as four separate cores if we 
+		// can see that we're doing it 4 times. Whatever. It works, I'm happy with that. -CAM
+		
 		// Core 1
 		if (context[1] == 0)
 		{
@@ -241,6 +253,7 @@ int main()
 		timeClick++;		
 	}
 	
+	// Data comes in. Data goes out. You can't explain that.
 	avgWaitingtimeClick = waitingtimeClick / NUM_OF_PROC;
 	cout << "Finished RR_QUAD simulation at timeClick: " << timeClick << endl;
 	cout << "Average RR_QUAD waiting timeClick: " << avgWaitingtimeClick << endl;

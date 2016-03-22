@@ -1,4 +1,7 @@
-// SJF - Charles Alan Macon
+// SJF
+// Charles Alan Macon
+// David Cmar
+// Noah Kindervag
 #include "gen_proc.h"
 
 using namespace std;
@@ -48,10 +51,13 @@ int main()
 			// find next process
 			for (int i = 0; i < NUM_OF_PROC; i++)
 			{
+				// if process[i] is NOT finished
 				if (proc->procs[i].get_finished_state() == false)
 				{
+					// and process[nextprocess] is ALSO NOT finished
 					if (proc->procs[nextProcess].get_finished_state() == false)
 					{
+						// compare the two
 						if (proc->procs[i].get_cycles() < proc->procs[nextProcess].get_cycles())
 						{
 							nextProcess = i;

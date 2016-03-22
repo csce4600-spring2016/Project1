@@ -1,4 +1,11 @@
-// RR2 - Charles Alan Macon
+// RR2
+// Charles Alan Macon
+// David Cmar
+// Noah Kindervag
+
+// This was originally done as an exercise to see if I could think my way through it. One of the
+// other members was "assigned" this task, but I got ahead of myself and finished it. Whoops.
+// I'm a programmer, I write things to delegate tasks for me.
 #include "gen_proc.h"
 
 using namespace std;
@@ -23,14 +30,16 @@ int main()
 	{
 		int currentProcessStartTime = proc->procs[currentProcess].get_arr();
 		
-		
+		// If the current process was supposed to have started by now, do things.
 		if (currentProcessStartTime <= time)
 		{
+			// Here we do things.
 			if (proc->procs[currentProcess].get_finished_state() == false)
 			{
+				// If the process hasn't already finished, actually do things.
 				cout << "Time: " << time << endl;
 				cout << "Current Process: " << currentProcess << endl;
-				//need to figure out a new way to find waitingTime
+				
 				waitingTime += (time - proc->procs[currentProcess].get_time_stopped());
 				cout << "Running Process" << endl;
 			
@@ -48,20 +57,25 @@ int main()
 					}
 					else
 					{
+						// If we're done with the process, we stop the clock and set it to finished.00
 						proc->procs[currentProcess].set_finished_state(true);
 					}
 				}
 				
 				if (proc->procs[currentProcess].get_finished_state() == true)
 				{
+					// If we finished the process in the last state, make a note of it.
 					numFinishedProc++;
 				}
 				else
 				{
+					// Otherwise, make note of when we stopped, and set how many cycles we
+					// have left in that process.
 					proc->procs[currentProcess].set_cycles(currentProcessCycles);
 					proc->procs[currentProcess].set_time_stopped(time);
 				}
 				
+				// CONTEXT SWITCH PENALTY MECHANISM. WHHOOOOA.
 				if (numFinishedProc < (NUM_OF_PROC - 1))
 				{
 					for (int i = 0; i < 10; i++)
@@ -72,6 +86,8 @@ int main()
 				}
 			}
 			
+			// Move to the next process, or loop back if we're at the end of the list.
+			// This will continue on until we're out of processes.
 			if (currentProcess < 49)
 			{
 				currentProcess++;
@@ -89,6 +105,7 @@ int main()
 		}
 	}
 	
+	// Calculate things. Print out other things. Same old, same old.
 	avgWaitingTime = waitingTime / NUM_OF_PROC;
 	cout << "Finished RR simulation at time: " << time << endl;
 	cout << "Average RR waiting time: " << avgWaitingTime << endl;
