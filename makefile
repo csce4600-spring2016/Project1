@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -c
-BINARIES = fifo fifo_quad rr rr_quad sjf sjf_quad
+BINARIES = fifo fifo_quad rr2 rr_quad sjf sjf_quad
 
 all: $(BINARIES) clean
 
@@ -19,11 +19,11 @@ fifo_quad: fifo_quad.o gen_proc.o
 fifo_quad.o: fifo_quad.cpp gen_proc.h
 	$(CC) $(CFLAGS) fifo_quad.cpp
 
-rr: rr.o gen_proc.o
-	$(CC) -o rr rr.o gen_proc.o
+rr2: rr2.o gen_proc.o
+	$(CC) -o rr2 rr2.o gen_proc.o
 
-rr.o: rr.cpp gen_proc.h
-	$(CC) $(CFLAGS) rr.cpp
+rr2.o: rr2.cpp gen_proc.h
+	$(CC) $(CFLAGS) rr2.cpp
 
 rr_quad: rr_quad.o gen_proc.o
 	$(CC) -o rr_quad rr_quad.o gen_proc.o
@@ -45,7 +45,7 @@ sjf_quad.o: sjf_quad.cpp gen_proc.h
 
 clean:
 	$(info Cleaning...)
-	\rm fifo.o fifo_quad.o rr.o rr_quad.o sjf.o sjf_quad.o gen_proc.o
+	\rm fifo.o fifo_quad.o rr2.o rr_quad.o sjf.o sjf_quad.o gen_proc.o
 
 uninstall:
 	$(info Removing binaries...)
