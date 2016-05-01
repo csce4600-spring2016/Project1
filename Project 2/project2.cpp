@@ -136,10 +136,10 @@ int main()
 	currentProcess = 0;
 	time2 = 0;
 
+    char* total_memory = (char*) calloc(2097152,1); // Allocate and NULL-initialize 20MB
+
 	// Part 2 - my_malloc() and my_free()
 	t2 = clock();
-
-    char* total_memory = (char*) calloc(2097152,1); // Allocate and NULL-initialize 20MB
 
 	while (currentProcess < NUM_OF_PROC)
 	{
@@ -183,6 +183,8 @@ int main()
 	}
 	t2 = clock() - t2;
 	part2Time = ((double)t2)/CLOCKS_PER_SEC;
+
+    free(total_memory);
 
 	// Part 3a - System has 50% needed memory
 	t3a = clock();
