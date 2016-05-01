@@ -138,6 +138,9 @@ int main()
 
 	// Part 2 - my_malloc() and my_free()
 	t2 = clock();
+
+    char* total_memory = (char*) calloc(2097152,1); // Allocate and NULL-initialize 20MB
+
 	while (currentProcess < NUM_OF_PROC)
 	{
 		int currentProcessStartTime = proc_2->procs[currentProcess].get_arr();
@@ -159,6 +162,7 @@ int main()
 
 				// allocate memory with my_malloc()
 				cout << "Allocating " << currentProcessMemFootprint << "kb in memory" << endl;
+                char* mem = my_malloc(currentProcessMemFootprint*1024, total_memory);
 
 				// "Run" process
 
@@ -170,6 +174,7 @@ int main()
 				}
 
 				// free memory with my_free()
+                my_free(currentProcessMemFootprint*1024, mem);
 
 				currentProcess++;
 				// stop clock and record
