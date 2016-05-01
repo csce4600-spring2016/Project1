@@ -12,6 +12,42 @@ int64_t GetCPUCount( unsigned int loword, unsigned int hiword )
 	return ( (int64_t) hiword << 32) + loword;
 }
 
+char* my_malloc(const int bytes_to_alloc, char* total_mem) {
+	int bytes_free = 0;
+	int offset; // loop counter, holds relative memory location
+
+	// find the required number of free bytes in our total pool
+	// since we aren't actually allocating memory at an OS level, we assume NULL is free
+	for (offset = 0; offset < 2097152; offset++) {
+	    if (total_mem[offset] == 0) {
+	        bytes_free++;
+	    } else {
+	        bytes_free = 0;
+	    }
+
+	    if (bytes_free >= bytes_to_alloc) {
+	        break;
+	    }
+	}
+
+	// return pointer to beginning of allocated memory if found, otherwise 0
+	if (bytes_free != bytes_to_alloc) {
+	    return 0;
+	} else {
+	    return total_mem + offset - bytes_to_alloc + 1;
+	}
+}
+
+
+void my_free(int length, char* allocated) {
+	// as we don't have any access to OS-level memory management constructs
+	// we must be given the length of the allocated memory space
+	for (int i = 0; i < length; i++) {
+	    allocated[i] = 0;
+	}
+}
+
+
 int main()
 {
 	processes* proc = new processes();
@@ -24,36 +60,36 @@ int main()
 	int avgWaitingTime = 0;
 	int numFinishedProc = 0;
 	int contextPenalty = 0;
-	
+
 	clock_t t1;
 	clock_t t2;
 	clock_t t3a;
 	clock_t t3b;
-	
+
 	time_t now;
 	time_t then;
-	
+
 	double part1Time = 0;
 	double part2Time = 0;
 	double part3aTime = 0;
 	double part3bTime = 0;
-	
-	
+
+
 
 	for (int i = 0; i < NUM_OF_PROC; i++)
 	{
 		// Show us our list of processes
 		cout << "ID: " << proc->procs[i].getID() << "\tcpu: " << proc->procs[i].get_cycles() << "\tmem: " << proc->procs[i].get_mem() << "\tarr: " << proc->procs[i].get_arr() << endl;
 	}
-	
+
 	// Part 1 - malloc() and free()
-	
+
 	unsigned int hi = 0, lo = 0;
 	double T = GetCPUCount( lo, hi );
 	while (currentProcess < NUM_OF_PROC)
 	{
 		int currentProcessStartTime = proc->procs[currentProcess].get_arr();
-		
+
 		// If the current process was supposed to have started by now, do things.
 		if (currentProcessStartTime <= time2)
 		{
@@ -62,38 +98,38 @@ int main()
 			{
 				cout << "Executing Process: " << currentProcess << endl;
 				// get system start time.
-				
+
 				// get number of cycles
 				int currentProcessCycles = proc->procs[currentProcess].get_cycles();
-				
+
 				// get memory footprint
 				int currentProcessMemFootprint = proc->procs[currentProcess].get_mem();
-				
+
 				// allocate memory with malloc()
 				cout << "Allocating " << currentProcessMemFootprint << "kb in memory" << endl;
-				
+
 				char * mem;
 				mem = (char*) malloc (currentProcessMemFootprint * 1024);
-				
+
 				// "Run" process
-				
+
 				for (currentProcessCycles; currentProcessCycles > 0; currentProcessCycles--)
 				{
 					// Don't really have to do anything here
 					time2++;
 					//cout << currentProcessCycles << endl;
 				}
-				
+
 				// free memory with free()
 				free (mem);
-				
+
 				currentProcess++;
 				// stop clock and record
 			}
 		}
 	}
 	int64_t CycleCount = GetCPUCount( lo, hi ) - T;
-	
+
 	// Reset currentProcess
 	currentProcess = 0;
 	time2 = 0;
@@ -103,7 +139,7 @@ int main()
 	while (currentProcess < NUM_OF_PROC)
 	{
 		int currentProcessStartTime = proc_2->procs[currentProcess].get_arr();
-		
+
 		// If the current process was supposed to have started by now, do things.
 		if (currentProcessStartTime <= time2)
 		{
@@ -112,27 +148,27 @@ int main()
 			{
 				cout << "Executing Process: " << currentProcess << endl;
 				// get system start time.
-				
+
 				// get number of cycles
 				int currentProcessCycles = proc_2->procs[currentProcess].get_cycles();
-				
+
 				// get memory footprint
 				int currentProcessMemFootprint = proc_2->procs[currentProcess].get_mem();
-				
+
 				// allocate memory with my_malloc()
 				cout << "Allocating " << currentProcessMemFootprint << "kb in memory" << endl;
-				
+
 				// "Run" process
-				
+
 				for (currentProcessCycles; currentProcessCycles > 0; currentProcessCycles--)
 				{
 					// Don't really have to do anything here
 					time2++;
 					//cout << currentProcessCycles << endl;
 				}
-				
+
 				// free memory with my_free()
-				
+
 				currentProcess++;
 				// stop clock and record
 			}
@@ -140,18 +176,18 @@ int main()
 	}
 	t2 = clock() - t2;
 	part2Time = ((double)t2)/CLOCKS_PER_SEC;
-	
+
 	// Part 3a - System has 50% needed memory
 	t3a = clock();
 	//Stuff here
 	t3a = clock() - t3a;
 	part3aTime = ((double)t3a)/CLOCKS_PER_SEC;
-	
+
 	// Part 3b - System has 10% needed memory
 	t3b = clock();
 	t3b = clock() - t3b;
 	part3bTime = ((double)t3b)/CLOCKS_PER_SEC;
-	
+
 	cout << "Part 1 in cycles:  " << CycleCount << endl;
 	cout << "Part 2 in seconds:  " << part2Time << endl;
 	cout << "Part 3a in seconds: " << part3aTime << endl;
