@@ -6,6 +6,8 @@
 
 using namespace std;
 
+#include <stdlib.h>
+
 int64_t GetCPUCount( unsigned int loword, unsigned int hiword )
 {
 	__asm__ __volatile__ ("rdtsc" : "=a" (loword), "=d" (hiword));
@@ -13,38 +15,38 @@ int64_t GetCPUCount( unsigned int loword, unsigned int hiword )
 }
 
 char* my_malloc(const int bytes_to_alloc, char* total_mem) {
-	int bytes_free = 0;
-	int offset; // loop counter, holds relative memory location
+    int bytes_free = 0;
+    int offset; // loop counter, holds relative memory location
 
-	// find the required number of free bytes in our total pool
-	// since we aren't actually allocating memory at an OS level, we assume NULL is free
-	for (offset = 0; offset < 2097152; offset++) {
-	    if (total_mem[offset] == 0) {
-	        bytes_free++;
-	    } else {
-	        bytes_free = 0;
-	    }
+    // find the required number of free bytes in our total pool
+    // since we aren't actually allocating memory at an OS level, we assume NULL is free
+    for (offset = 0; offset < 2097152; offset++) {
+        if (total_mem[offset] == 0) {
+            bytes_free++;
+        } else {
+            bytes_free = 0;
+        }
 
-	    if (bytes_free >= bytes_to_alloc) {
-	        break;
-	    }
-	}
+        if (bytes_free >= bytes_to_alloc) {
+            break;
+        }
+    }
 
-	// return pointer to beginning of allocated memory if found, otherwise 0
-	if (bytes_free != bytes_to_alloc) {
-	    return 0;
-	} else {
-	    return total_mem + offset - bytes_to_alloc + 1;
-	}
+    // return pointer to beginning of allocated memory if found, otherwise 0
+    if (bytes_free != bytes_to_alloc) {
+        return 0;
+    } else {
+        return total_mem + offset - bytes_to_alloc + 1;
+    }
 }
 
 
 void my_free(int length, char* allocated) {
-	// as we don't have any access to OS-level memory management constructs
-	// we must be given the length of the allocated memory space
-	for (int i = 0; i < length; i++) {
-	    allocated[i] = 0;
-	}
+    // as we don't have any access to OS-level memory management constructs
+    // we must be given the length of the allocated memory space
+    for (int i = 0; i < length; i++) {
+        allocated[i] = 0;
+    }
 }
 
 
