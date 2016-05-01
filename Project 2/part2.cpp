@@ -25,7 +25,7 @@ char* my_malloc(const int bytes_to_alloc, char* total_mem) {
     if (bytes_free != bytes_to_alloc) {
         return 0;
     } else {
-        return total_mem + offset - bytes_to_alloc;
+        return total_mem + offset - bytes_to_alloc + 1;
     }
 }
 
@@ -48,8 +48,13 @@ int main() {
     test[0] = 'a';
     test[1] = 'b';
     test[2] = 'c';
+    char* test2 = my_malloc(2, total_mem);
+    test2[0] = 'd';
+    test2[1] = 'e';
+    char* test3 = my_malloc(1, total_mem);
+    test3[0] = 'f';
 
-    cout << "This should print \"abc\": " << test[0] << test[1] << test[2] << endl;
+    cout << "This should print \"abcdef\": " << test[0] << test[1] << test[2] << test2[0] << test2[1] << test3[0] << endl;
 
     my_free(3, test);
 
